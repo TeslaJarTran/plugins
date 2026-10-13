@@ -93,3 +93,4 @@ Open a todolist whose first items are the matched playbook's steps, copied in ve
 - **Audit.** Validate `~/.cursor/rules/onprem-models.mdc` against the lock. "audit the rule", "is my lock intact", "check my model config". `playbooks/audit.md`.
 - **Spawn retry.** A subagent spawn failed, timed out, or was rejected, and the model choice is next. "the spawn failed, what now". `playbooks/spawn-retry.md`.
 - **Panel.** Cross-model review of a diff or a design, judges on on-prem models. "panel this", "cross-judge these attempts". `playbooks/panel.md`.
+- **Robodev.** External managed-fleet deep review of a diff or tree; the evidence path, never a judgment seat. "robodev this", "deep external review", "pre-ship cross-check". `playbooks/robodev.md`.

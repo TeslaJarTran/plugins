@@ -61,6 +61,7 @@ To get the same style from a subagent of your own, spawn it with `subagent_type:
 | Validate the rule file against the lock | [`/onprem-mode`](../onprem-mode/SKILL.md), the **audit** playbook |
 | Decide the retry model after a failed spawn | [`/onprem-mode`](../onprem-mode/SKILL.md), the **spawn-retry** playbook |
 | Run a cross-model review on on-prem judges | [`/onprem-mode`](../onprem-mode/SKILL.md), the **panel** playbook |
+| Run a deep managed-fleet review of a diff or tree | [`/onprem-mode`](../onprem-mode/SKILL.md), the **robodev** playbook |
 | Give agents a scripted way to drive the app and prove behavior | [`/create-verify-skill`](../create-verify-skill/SKILL.md) |
 | Steer with a principle's name | the `principle-*` leaf, e.g. "apply deterministic proof" |
 | Find their way around onprem | `/onprem-help` |

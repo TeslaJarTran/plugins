@@ -7,3 +7,5 @@ Cross-model review of a diff or a design, with judges on on-prem models. Use for
 3. Gather each result. A failed spawn follows the **spawn-retry** playbook.
 4. Spawn a cross-judge on a family different from the parent when possible (stay on-prem either way). The cross-judge picks a winner or names the parts to merge.
 5. Report the verdict, cite the panel models, and apply **deterministic-proof** where a check can settle what the panel claimed.
+
+A managed review (such as RoboDev) may feed this panel as evidence. It never takes a seat and never cross-judges; the seats and the verdict stay on-prem. See the **robodev** playbook for that path.

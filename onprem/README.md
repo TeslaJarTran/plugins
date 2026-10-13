@@ -37,15 +37,16 @@ every subagent spawn uses only `inherit-parent`/`auto`, `Qwen/Qwen3.8-27B-FP8`, 
 
 ## usage
 
-use [`/onprem-mode`](./skills/onprem-mode/SKILL.md) at the start of a task. it applies the lock and the named principles, and routes to a playbook when the task is a model decision, a failed spawn, or a cross-model review.
+use [`/onprem-mode`](./skills/onprem-mode/SKILL.md) at the start of a task. it applies the lock and the named principles, and routes to a playbook when the task is a model decision, a failed spawn, a cross-model review, or a deep external review.
 
-### the three playbooks
+### the four playbooks
 
 | playbook | for |
 |---|---|
 | [audit](./skills/onprem-mode/playbooks/audit.md) | validate `onprem-models.mdc` against the lock. "is my lock intact", "check my model config". |
 | [spawn retry](./skills/onprem-mode/playbooks/spawn-retry.md) | a subagent spawn failed or timed out; pick the retry model without crossing the ban. |
 | [panel](./skills/onprem-mode/playbooks/panel.md) | cross-model review of a diff or design, judges on on-prem models, cross-judge differs from the parent. |
+| [robodev](./skills/onprem-mode/playbooks/robodev.md) | deep external review of a diff or tree on the managed fleet; evidence, never a seat. "robodev this", "pre-ship cross-check". |
 
 to keep [`/onprem-mode`](./skills/onprem-mode/SKILL.md) on across turns, pick it from the `/` menu and press option+enter (mac) or alt+enter (windows) instead of enter. that makes it a custom mode. plain enter attaches it to one message only.
 
