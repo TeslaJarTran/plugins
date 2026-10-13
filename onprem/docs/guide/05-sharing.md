@@ -6,9 +6,11 @@ onprem is built to hand to someone else. The handoff is short because the stack 
 
 Send the repo (https://github.com/TeslaJarTran/onprem) or the plugin directory. They do:
 
-1. `git clone https://github.com/TeslaJarTran/onprem ~/.cursor/plugins/local/onprem`, or put the directory there.
+1. `mkdir -p ~/.cursor/plugins/local && git clone https://github.com/TeslaJarTran/onprem ~/.cursor/plugins/local/onprem`, or put the directory there.
 2. Run `/setup-onprem`.
-3. Start a task with `/onprem-mode`.
+3. Start a new chat, then start a task with `/onprem-mode`. The rule applies to new sessions only.
+
+If the `/onprem-*` skills do not appear in the `/` menu after cloning, reload the window (Developer: Reload Window). Cursor picks up local plugins at startup.
 
 That's it. The rule file is **generated, not copied**, on purpose:
 

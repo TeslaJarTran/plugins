@@ -12,7 +12,7 @@ Keep the main-thread context for decisions and the work you do yourself. Route b
 
 How to apply:
 
-- **Bulk to subagents.** Reading many files, searching the repo, or exploring a subsystem goes to a `generalPurpose` or `onprem-agent` subagent. Its context absorbs the volume.
+- **Bulk to subagents.** Reading many files, searching the repo, or exploring a subsystem goes to an `onprem-agent` subagent. Never `generalPurpose`: it skips the mode read and the role mapping (see onprem-mode's Subagents section). The subagent's context absorbs the volume.
 - **Summaries, not payloads.** What returns to the main thread is the finding, the list of matches, the conclusion. Not the file contents, not the full transcript.
 - **File pointers, not inline context.** When a subagent needs an artifact, give it the path and have it read the file. Do not paste the file into the brief.
 - **Plan fan-out in the main thread, execute it out of it.** The coordination decision — what to spawn, on which model, with what scope — belongs in the main thread. The spawning does not need to be narrated back.

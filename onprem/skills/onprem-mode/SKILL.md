@@ -19,7 +19,7 @@ The on-prem lock, in five lines:
 - Every subagent spawn uses only `inherit-parent`/`auto`, `Qwen/Qwen3.8-27B-FP8`, `Qwen/Qwen3.8-Flash-Next-FP8`, `moonshotai/Kimi-K3`, `zai-org/GLM-5.3`.
 - Never Claude/Anthropic, Gemini/Google, Grok/xAI, or OpenAI/GPT, even when one is available in the session, even on a failed spawn.
 - A failed spawn is retried on a different allowlisted model, or stopped and reported. Never degraded to a banned one.
-- A role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`).
+- A role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`). It inherits the parent, it does not grant on-prem status. If the parent chat is a frontier model, that role runs frontier. See **inherit-parent-honestly**.
 - The rule file from `/setup-onprem` is the single source of truth for role-to-model mapping.
 
 Remaining triggers:
@@ -67,7 +67,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 **Use `subagent_type: "onprem-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers).
 
-**Defaults for every `Task` call.** `run_in_background: true`, agent mode, file pointers not inlined context. Model per role comes from the `/setup-onprem` rule. Code roles default to `Qwen/Qwen3.8-Flash-Next-FP8`. Prose and judgment default to `moonshotai/Kimi-K3`. The hardest changes read `hardest tasks`. Diverse-model panels default to `Qwen/Qwen3.8-27B-FP8` and `zai-org/GLM-5.3`. Never Claude/Anthropic, Gemini/Google, Grok/xAI, or OpenAI/GPT. A role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`).
+**Defaults for every `Task` call.** `run_in_background: true`, agent mode, file pointers not inlined context. Model per role comes from the `/setup-onprem` rule. Code roles default to `Qwen/Qwen3.8-Flash-Next-FP8`. Prose and judgment default to `moonshotai/Kimi-K3`. The hardest changes read `hardest tasks`. Diverse-model panels default to `Qwen/Qwen3.8-27B-FP8` and `zai-org/GLM-5.3`. Never Claude/Anthropic, Gemini/Google, Grok/xAI, or OpenAI/GPT. A role with no line keeps its default, and a role line of `inherit-parent` or `auto` runs that role on the parent chat model (omit Task `model`), inheriting it, not granting on-prem status.
 
 You own every subagent's work. Review the diff and write your own summary, don't pass through what it said. A second opinion is the same prompt against a different model. Agreement is high-signal.
 

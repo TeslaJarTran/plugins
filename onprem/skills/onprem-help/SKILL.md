@@ -35,7 +35,7 @@ onprem is a model governance lock plus an operating doctrine, packaged like psta
 ## Get set up
 
 1. Put the plugin at `~/.cursor/plugins/local/onprem/` (or `/add-plugin onprem` once it is hosted).
-2. Run [`/setup-onprem`](../setup-onprem/SKILL.md). It detects the on-prem models you have, strips the banned set, asks for a reasoning budget (default `unlimited`), maps a model to each role, validates every slug, and writes `~/.cursor/rules/onprem-models.mdc`. The rule applies to new chats.
+2. Run [`/setup-onprem`](../setup-onprem/SKILL.md). It detects the on-prem models you have, strips the banned set, confirms the unlimited (max) budget, maps a model to each role, validates every slug, and writes `~/.cursor/rules/onprem-models.mdc`. The rule applies to new chats.
 3. Start a real task with `/onprem-mode`, a goal, and a check that can pass or fail.
 
 Installing changes nothing until the user invokes a skill. Only `/setup-onprem` writes the rule. The [README](../../README.md) and [guide page 1](../../docs/guide/01-setup.md) have the details.

@@ -16,11 +16,11 @@ It does seven things, in order:
 
 1. **Detects** the model slugs available to your session, and strips the banned families from what it shows you.
 2. **Loads** your current `~/.cursor/rules/onprem-models.mdc` if one exists, so a re-run keeps your choices.
-3. **Asks for a budget.** Four options: `unlimited — keep max` (the default for this stack), `large`, `medium`, `small`. The budget label is recorded; it does not rewrite the model slugs, which carry no effort token.
+3. **Confirms the budget.** The onprem stack runs `unlimited (max)` and depth is never rationed, so the budget is a confirmation, not a choice. It is recorded as the rule's `# budget` line; it does not rewrite the model slugs, which carry no effort token.
 4. **Shows the role map** and lets you change individual roles. You are offered only allowlisted detected models, plus `inherit-parent` and `auto`.
 5. **Validates.** Every real slug must be allowlisted *and* available. A banned or unavailable slug stops the write. This is a gate, not a warning.
 6. **Writes** the rule file, overwriting it whole so re-runs stay idempotent.
-7. **Confirms**, names the allowlist, and offers a `/create-verify-skill` pass if your project has no way to prove app behavior.
+7. **Confirms**, names the allowlist, names what the `inherit-parent`/`auto` roles inherit (and warns when the parent chat is a frontier model), and offers a `/create-verify-skill` pass if your project has no way to prove app behavior.
 
 The rule file applies to **new sessions**. A model change mid-chat does not re-route subagents already in flight.
 

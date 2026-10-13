@@ -1,6 +1,6 @@
 ---
 name: setup-onprem
-description: Configure which models the onprem stack uses per role and at what reasoning budget. Detects available models, strips the banned set, and writes an always-applied rule that enforces the on-prem hard lock. Use for /setup-onprem, "configure onprem models", "onprem budget", "model lock", or changing onprem's model choices.
+description: Configure which models the onprem stack uses per role. Confirms the unlimited (max) budget, detects available models, strips the banned set, and writes an always-applied rule that enforces the on-prem hard lock. Use for /setup-onprem, "configure onprem models", "onprem budget", "model lock", or changing onprem's model choices.
 ---
 
 # Setup onprem
@@ -31,7 +31,7 @@ Allowlisted slugs have no effort token. A reasoning budget does not rewrite them
 
 ### 1. Detect available models
 
-Enumerate the model slugs you can pass to a `Task` subagent in this session; that is the dependable source. If Cursor also exposes a models API or CLI that lists the user's entitled models, prefer it for completeness. **Strip the banned set (Claude/Anthropic, Gemini/Google, Grok/xAI, and OpenAI/GPT) from the offer list before showing anything.** The offer list is the intersection of detected slugs and the locked allowlist. If you cannot detect any allowlisted slug, still offer `inherit-parent` and `auto`. Never write a real slug you have not confirmed is available and allowlisted. The aliases `inherit-parent` and `auto` are always valid even though they are not detected slugs.
+Enumerate the model slugs you can pass to a `Task` subagent in this session; that is the dependable source. If Cursor also exposes a models API or CLI that lists the user's entitled models, prefer it for completeness. **Strip the banned set (Claude/Anthropic, Gemini/Google, Grok/xAI, and OpenAI/GPT) from the offer list before showing anything.** The offer list is the intersection of detected slugs and the locked allowlist. If you cannot detect any allowlisted slug, do not proceed. An alias-only rule looks configured but grants no on-prem status (**inherit-parent-honestly**); the setup would end by declaring a lock that nothing enforces. Tell the user the setup cannot complete on this machine and that it should run where the session can see at least one allowlisted slug. Never write a real slug you have not confirmed is available and allowlisted. The aliases `inherit-parent` and `auto` are always valid even though they are not detected slugs.
 
 ### 2. Load current state
 
@@ -41,16 +41,11 @@ If the user also runs pstack and wants one source of truth, offer to align `~/.c
 
 ### 3. Budget, map, and confirm
 
-**(a) Ask for a budget.** Prefer AskQuestion over free text. Offer these four options with these exact labels, and name the current budget when the rule records one.
+**(a) Confirm the budget.** The onprem stack runs `unlimited (max)`. Depth is never rationed, and on-prem spend is not a cost argument (**unlimited-budget**). Present this as a confirmation, not a choice, and name the current budget when the rule records one. Do not offer rationed labels; a user who wants to ration depth is looking for pstack's setup, not onprem's.
 
-- `unlimited — keep max`
-- `large — xhigh reasoning`
-- `medium — high reasoning`
-- `small — medium reasoning`
+**(b) Apply it.** Record `# budget: unlimited (max)`. Do not rewrite allowlisted slugs. They have no effort token. `inherit-parent` and `auto` do not change. On a re-run, keep any role whose value is already on the allowlist **and** detected. An allowlisted value that is not detected is remapped to a detected allowlisted slug, or flagged for a choice at confirm time, never kept silently. Never turn a role into a Claude, Gemini, Grok, or GPT slug to express a budget.
 
-**(b) Apply it.** Record the chosen label. Do not rewrite allowlisted slugs. They have no effort token, so `unlimited`, `large`, `medium`, and `small` leave every role value as it is. `inherit-parent` and `auto` do not change. On a re-run, keep any role whose value is already on the allowlist. Never turn a role into a Claude, Gemini, Grok, or GPT slug to express a budget.
-
-**(c) Show the roles and confirm.** Show every role with its model, marking any real slug not in the detected allowlisted set as needing a choice. Ask whether to accept as-is or change specific roles, offering only allowlisted detected models plus `inherit-parent` and `auto` (both mean: this role runs on the parent chat model) as the options. Prefer AskQuestion over free text. For panel roles the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it whose model family differs from the parent's when possible, staying on Qwen or GLM. `swarm workers` is the default model for every worker unless a race or comparison assigns another allowlisted model per arm.
+**(c) Show the roles and confirm.** Show every role with its model, marking any real slug not in the detected allowlisted set as needing a choice. Do not offer accept-as-is while any role value is undetected; every undetected role gets a detected allowlisted slug or `inherit-parent`/`auto` first. Ask whether to accept or change specific roles, offering only allowlisted detected models plus `inherit-parent` and `auto` (both mean: this role runs on the parent chat model) as the options. Prefer AskQuestion over free text. For panel roles the value is a list, and one subagent runs per entry, alias entries included, so the list length sets the count. `arena cross-judge pool` is also a list, but Arena selects one value from it whose model family differs from the parent's when possible, staying on Qwen or GLM. `swarm workers` is the default model for every worker unless a race or comparison assigns another allowlisted model per arm.
 
 ### 4. Validate (enforce the hard lock)
 
@@ -58,7 +53,7 @@ Every real slug written must be in the detected set **and** on the locked allowl
 
 ### 5. Write the rule
 
-Write `~/.cursor/rules/onprem-models.mdc` with `alwaysApply: true`, a `# budget` line with the chosen label and its target effort, and one line per role. Overwrite the whole file so re-runs stay idempotent. Keep the operator's current role values when they are already on the allowlist. Shape when starting from defaults:
+Write `~/.cursor/rules/onprem-models.mdc` with `alwaysApply: true`, a `# budget` line recording `unlimited (max)`, and one line per role. Overwrite the whole file so re-runs stay idempotent. Keep the operator's current role values when they are on the allowlist and detected. Shape when starting from defaults:
 
 ```
 ---
@@ -67,7 +62,7 @@ alwaysApply: true
 ---
 # onprem model configuration. One line per role. Delete a line to fall back to the skill default.
 # `inherit-parent` or `auto` as a value: the role runs on the parent chat model (omit Task `model`). Alias entries in a panel list still count toward its fan-out.
-# HARD LOCK allowlist: inherit-parent, Qwen/Qwen3.8-27B-FP8, Qwen/Qwen3.8-Flash-Next-FP8, moonshotai/Kimi-K3, zai-org/GLM-5.3. Never Claude/Anthropic, Gemini/Google, Grok/xAI, or OpenAI/GPT.
+# HARD LOCK allowlist: inherit-parent/auto, Qwen/Qwen3.8-27B-FP8, Qwen/Qwen3.8-Flash-Next-FP8, moonshotai/Kimi-K3, zai-org/GLM-5.3. Never Claude/Anthropic, Gemini/Google, Grok/xAI, or OpenAI/GPT.
 # budget: unlimited (max)
 feature, refactoring: Qwen/Qwen3.8-Flash-Next-FP8
 bug-fix: Qwen/Qwen3.8-Flash-Next-FP8
@@ -91,7 +86,7 @@ interrogate reviewers: Qwen/Qwen3.8-27B-FP8, zai-org/GLM-5.3
 
 ### 6. Confirm
 
-Tell the user the rule was written and that it applies to new sessions. Re-running this skill updates it. Say that the hard lock is still in force and name the allowlist.
+Tell the user the rule was written and that it applies to new sessions. Re-running this skill updates it. Say that the hard lock is still in force and name the allowlist. Name what the aliases inherit: state this session's parent chat model and that every `inherit-parent`/`auto` role runs on it. If the parent chat is a frontier model, warn that those roles run off-prem and offer to pin them to real allowlisted slugs before finishing.
 
 ### 7. Offer a verification skill (optional)
 

@@ -15,8 +15,10 @@ Banned, by family:
 - **Anthropic / Claude** — any slug containing `claude`, `anthropic`, `fable`, `opus`, `sonnet`, `haiku`.
 - **Google / Gemini** — any slug containing `gemini`, `google`.
 - **Grok / xAI** — any slug containing `grok`, `xai`.
-- **OpenAI / GPT** — any slug containing `gpt`, `sol`.
+- **OpenAI / GPT** — any slug containing `gpt`, `sol`, `o1`, `o3`.
 
 This holds **even when** a banned slug appears available in the session model list, **even when** a spawn fails or times out, and **even when** no allowlisted model seems to work. The ban is not a preference that availability can override.
 
 A banned slug never appears in the rule file, in a spawn, in a panel, or in an offer list. If nothing allowlisted works, stop and tell the user (**no-fallback-to-banned**). Do not present a banned option as the escape hatch.
+
+Inheritance is the one path by which a frontier model can still run in the stack, and it is not an exception to this ban. `inherit-parent`/`auto` names no frontier slug; it runs whatever the parent chat runs. That alias is governed by **inherit-parent-honestly**. The ban here covers every slug that is written, offered, presented, selected, or defaulted.
